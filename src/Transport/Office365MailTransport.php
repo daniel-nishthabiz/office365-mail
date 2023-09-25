@@ -7,6 +7,7 @@ use Microsoft\Graph\Model\UploadSession;
 use Symfony\Component\Mailer\SentMessage;
 use Illuminate\Mail\Transport\Transport;
 use Symfony\Component\Mime\MessageConverter;
+use Swift_Mime_SimpleMessage;
 
 use Symfony\Component\Mime\Email;
 use Illuminate\Support\Str;
@@ -19,8 +20,7 @@ class Office365MailTransport extends Transport
         parent::__construct();
     }
 
-    protected function doSend(SentMessage $message): void
-    // public function send(Swift_Mime_SimpleMessage $message, &$failedRecipients = null)
+    public function send(Swift_Mime_SimpleMessage $message, &$failedRecipients = null)
     {
 
         // $this->beforeSendPerformed($message);
