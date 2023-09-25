@@ -5,13 +5,13 @@ namespace Office365Mail\Transport;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model\UploadSession;
 use Symfony\Component\Mailer\SentMessage;
-use Symfony\Component\Mailer\Transport\AbstractTransport;
+use Illuminate\Mail\Transport\Transport;
 use Symfony\Component\Mime\MessageConverter;
 
 use Symfony\Component\Mime\Email;
 use Illuminate\Support\Str;
 
-class Office365MailTransport extends AbstractTransport
+class Office365MailTransport extends Transport
 {
 
     public function __construct()
