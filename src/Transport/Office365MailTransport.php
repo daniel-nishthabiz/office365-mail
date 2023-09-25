@@ -17,7 +17,6 @@ class Office365MailTransport extends Transport
 
     public function __construct()
     {
-        parent::__construct();
     }
 
     public function send(Swift_Mime_SimpleMessage $message, &$failedRecipients = null)
