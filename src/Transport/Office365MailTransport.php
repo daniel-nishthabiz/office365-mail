@@ -37,12 +37,11 @@ class Office365MailTransport extends Transport
                 ->execute();
 
             foreach ($message->getChildren() as $attachment) {
-                if ($attachment instanceof \Swift_Mime_SimpleMimeEntity) {
+                if ($attachment instanceof \Swift_Attachment) {
                     $fileName = $attachment->getHeaders()->get('Content-Disposition')->getParameter('filename');
                     $content = $attachment->getBody();
                     $fileSize = strlen($content);
                     $size = $fileSize / 1048576; //byte -> mb
-                    $id = $attachment->getId();
                     $attachmentMessage = [
                         'AttachmentItem' => [
                             'attachmentType' => 'file',
@@ -56,8 +55,7 @@ class Office365MailTransport extends Transport
                             "@odata.type" => "#microsoft.graph.fileAttachment",
                             "name" => $attachment->getHeaders()->get('Content-Disposition')->getParameter('filename'),
                             "contentType" => $attachment->getBodyContentType(),
-                            "contentBytes" => base64_encode($attachment->getBody()),
-                            'contentId'    => $id
+                            "contentBytes" => base64_encode($attachment->getBody())
                         ];
 
                         $addAttachment = $graph->createRequest("POST", "/users/" . key($message->getFrom()) . "/messages/" . $graphMessage->getId() . "/attachments")
@@ -145,7 +143,7 @@ class Office365MailTransport extends Transport
             'subject' => $message->getSubject(),
             'body' => [
                 'contentType' => $message->getBodyContentType() == "text/html" ? 'html' : 'text',
-                'content' => $message->getBody()
+                'content' => $message->getBody()->toHtml()
             ]
         ];
 
@@ -154,13 +152,12 @@ class Office365MailTransport extends Transport
             //add attachments if any
             $attachments = [];
             foreach ($message->getChildren() as $attachment) {
-                if ($attachment instanceof \Swift_Mime_SimpleMimeEntity) {
+                if ($attachment instanceof \Swift_Attachment) {
                     $attachments[] = [
                         "@odata.type" => "#microsoft.graph.fileAttachment",
                         "name" => $attachment->getHeaders()->get('Content-Disposition')->getParameter('filename'),
                         "contentType" => $attachment->getBodyContentType(),
                         "contentBytes" => base64_encode($attachment->getBody()),
-                        'contentId'    => $attachment->getId()
                     ];
                 }
             }
