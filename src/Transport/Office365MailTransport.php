@@ -23,7 +23,7 @@ class Office365MailTransport extends Transport
     {
 
         // $this->beforeSendPerformed($message);
-        $email = MessageConverter::toEmail($message->getOriginalMessage());
+        $email = MessageConverter::toEmail($message);
 
         $graph = new Graph();
 
